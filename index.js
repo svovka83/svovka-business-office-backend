@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 
-import UserModel from "./models/UserSchema.js";
+import { register, getAllUsers } from "./controller/UserController.js";
 
 mongoose
   .connect(
@@ -17,24 +17,8 @@ mongoose
 const app = express();
 app.use(express.json());
 
-app.post("/register", async (req, res) => {
-  const doc = new UserModel({
-    fullName: req.body.fullName,
-    password: req.body.password,
-  });
-
-  const user = await doc.save();
-
-  res.json(user);
-});
-
-app.get("/users", async () => {
-  const users = await UserModel.find();
-
-  console.log(users);
-
-  res.status(200).json(users);
-});
+app.post("/register", register);
+app.get("/users", getAllUsers);
 
 app.listen(5555, () => {
   console.log(`Server is working.`);

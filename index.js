@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 
 import { register, getAllUsers } from "./controller/UserController.js";
 
@@ -18,6 +19,7 @@ mongoose
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.post("/register", register);
 app.get("/users", getAllUsers);

@@ -8,9 +8,8 @@ export const register = async (req, res) => {
 
   const user = await doc.save();
 
-  res.json(user);
+  res.send(user);
 };
-
 
 export const getAllUsers = async (req, res) => {
   const users = await UserModel.find();

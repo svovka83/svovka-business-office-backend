@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5555;
 
 mongoose
   .connect(
-    "mongodb+srv://svovka83:WRbG9BycwD5FwSfb@cluster0.rgue1es.mongodb.net/kids?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb+srv://svovka83:WRbG9BycwD5FwSfb@cluster0.rgue1es.mongodb.net/addition?retryWrites=true&w=majority&appName=Cluster0"
   )
   .then(() => {
     console.log("DB connecting");

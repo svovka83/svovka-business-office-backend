@@ -8,11 +8,13 @@ export const register = async (req, res) => {
 
   const user = await doc.save();
 
-  res.send(user);
+  res.status(201).json({
+    message: `${req.body.fullName} is created`,
+  });
 };
 
 export const getAllUsers = async (req, res) => {
   const users = await UserModel.find();
 
   res.status(200).json(users);
-}
+};

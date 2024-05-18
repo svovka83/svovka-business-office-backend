@@ -4,8 +4,6 @@ import cors from "cors";
 
 import { register, getAllUsers } from "./controller/UserController.js";
 
-const PORT = process.env.PORT || 5555;
-
 mongoose
   .connect(
     "mongodb+srv://svovka83:WRbG9BycwD5FwSfb@cluster0.rgue1es.mongodb.net/addition?retryWrites=true&w=majority&appName=Cluster0"
@@ -18,6 +16,8 @@ mongoose
   });
 
 const app = express();
+const PORT = process.env.PORT || 5555;
+
 app.use(express.json());
 app.use(cors());
 

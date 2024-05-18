@@ -5,9 +5,7 @@ import cors from "cors";
 import { register, getAllUsers } from "./controller/UserController.js";
 
 mongoose
-  .connect(
-    "process.env.MONGODB_URI"
-  )
+  .connect("process.env.MONGODB_URI")
   .then(() => {
     console.log("DB connecting");
   })

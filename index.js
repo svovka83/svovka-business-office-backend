@@ -6,7 +6,7 @@ import { register, getAllUsers } from "./controller/UserController.js";
 
 mongoose
   .connect(
-    "mongodb+srv://svovka83:WRbG9BycwD5FwSfb@cluster0.rgue1es.mongodb.net/addition?retryWrites=true&w=majority&appName=Cluster0"
+    "process.env.MONGODB_URI"
   )
   .then(() => {
     console.log("DB connecting");

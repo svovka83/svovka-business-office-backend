@@ -28,7 +28,7 @@ app.use(cors());
 
 app.get("/", (req, res) => {
   res.json({
-    message: "server is working",
+    message: "server is working!",
   });
 });
 app.post("/register", register);

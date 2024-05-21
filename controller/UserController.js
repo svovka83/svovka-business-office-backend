@@ -52,10 +52,10 @@ export const login = async (req, res) => {
       return res.status(400).json(errors.array());
     }
 
-    const user = await UserModel.findOne({ email: req.body.email });
+    const user = await UserModel.findOne({ email: req.body.email }); // byId checkAuth
 
     if (!user) {
-      return res.status(400).json({
+      return res.status(401).json({
         message: "Invalid login or password",
       });
     }
@@ -66,7 +66,7 @@ export const login = async (req, res) => {
     );
 
     if (!isValidPassword) {
-      return res.status(400).json({
+      return res.status(401).json({
         message: "Invalid login or password",
       });
     }
@@ -94,15 +94,21 @@ export const login = async (req, res) => {
 };
 
 export const getMe = async (req, res) => {
-try {
+  try {
+    const user = await UserModel.findById(req.userId);
 
-  res.send("OK!")
+    if (!user) {
+      res.status(404).json({ message: "user not found" }); // ???
+    }
 
+    const { fullName } = user;
+
+    res.json({ fullName });
   } catch (err) {
     console.log(err);
     res.status(404).json({ message: "user not found" });
   }
-}
+};
 
 export const getAllUsers = async (req, res) => {
   const users = await UserModel.find();

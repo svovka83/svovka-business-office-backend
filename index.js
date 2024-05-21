@@ -3,12 +3,21 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 
-import { register, login, getAllUsers } from "./controller/UserController.js";
+import { registerValidation, loginValidation } from "./validations.js";
+import { checkAuth } from "./utils/checkAuth.js";
 
-dotenv.config();
+import {
+  register,
+  login,
+  getMe,
+  getAllUsers,
+} from "./controller/UserController.js";
+
 
 const app = express();
 const PORT = process.env.PORT || 5555;
+
+dotenv.config();
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -23,10 +32,14 @@ mongoose
 app.use(express.json());
 app.use(cors());
 
-app.post("/register", register);
-app.post("/login", login);
+app.post("/register", registerValidation, register);
+app.post("/login", loginValidation, login);
+app.get("/me", checkAuth, getMe);
 app.get("/users", getAllUsers);
 
-app.listen(PORT, () => {
-  console.log(`Server is working.`);
+app.listen(PORT, (err) => {
+  if (err) {
+    return console.log("Some error:", err);
+  }
+  console.log("Server is working.");
 });

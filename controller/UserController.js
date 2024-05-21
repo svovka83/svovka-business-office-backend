@@ -1,10 +1,16 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { validationResult } from "express-validator";
 
 import { UserModel } from "../models/UserSchema.js";
 
 export const register = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors.array());
+    }
+
     const password = req.body.password;
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
@@ -27,8 +33,10 @@ export const register = async (req, res) => {
       }
     );
 
+    const { _id, email, passwordHash, ...userData } = user._doc;
+
     res.status(201).json({
-      message: "success",
+      ...userData,
       token,
     });
   } catch (err) {
@@ -37,23 +45,64 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = (req, res) => {
-  const user = UserModel.findOne(req.body.email);
+export const login = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors.array());
+    }
 
-  // const password = await bcrypt.compare(req.body.password);
+    const user = await UserModel.findOne({ email: req.body.email });
 
-  const token = jwt.sign(
-    {
-      email: req.body.email,
-    },
-    "secretTokenKey"
-  );
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid login or password",
+      });
+    }
 
-  res.json({
-    message: "ok",
-    token,
-  });
+    const isValidPassword = await bcrypt.compare(
+      req.body.password,
+      user._doc.passwordHash
+    );
+
+    if (!isValidPassword) {
+      return res.status(400).json({
+        message: "Invalid login or password",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        _id: user._id,
+      },
+      "secretTokenKey",
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    const { fullName } = user._doc;
+
+    res.status(200).json({
+      fullName,
+      token,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "failed to authorize" });
+  }
 };
+
+export const getMe = async (req, res) => {
+try {
+
+  res.send("OK!")
+
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({ message: "user not found" });
+  }
+}
 
 export const getAllUsers = async (req, res) => {
   const users = await UserModel.find();

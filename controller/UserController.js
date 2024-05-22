@@ -100,7 +100,13 @@ export const getMe = async (req, res) => {
 };
 
 export const getAllUsers = async (req, res) => {
-  const users = await UserModel.find();
+  try {
+    const users = await UserModel.find();
 
-  res.status(200).json(users);
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(404).json({
+      message: "users not found",
+    });
+  }
 };

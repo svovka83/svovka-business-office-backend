@@ -3,7 +3,11 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 
-import { registerValidation, loginValidation } from "./validations.js";
+import {
+  registerValidation,
+  loginValidation,
+} from "./validations/validationConditions.js";
+import { validationErrors } from "./validations/validationErrors.js";
 import { checkAuth } from "./utils/checkAuth.js";
 
 import {
@@ -12,7 +16,6 @@ import {
   getMe,
   getAllUsers,
 } from "./controller/UserController.js";
-
 
 const app = express();
 const PORT = process.env.PORT || 5555;
@@ -32,8 +35,8 @@ mongoose
 app.use(express.json());
 app.use(cors());
 
-app.post("/register", registerValidation, register);
-app.post("/login", loginValidation, login);
+app.post("/register", registerValidation, validationErrors, register);
+app.post("/login", loginValidation, validationErrors, login);
 app.get("/me", checkAuth, getMe);
 app.get("/users", getAllUsers);
 

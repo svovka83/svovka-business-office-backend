@@ -16,6 +16,7 @@ import {
   getMe,
   getAllUsers,
 } from "./controller/UserController.js";
+import { createPosts, getAllPosts } from "./controller/PostController.js";
 
 const app = express();
 const PORT = process.env.PORT || 5555;
@@ -39,6 +40,9 @@ app.post("/register", registerValidation, validationErrors, register);
 app.post("/login", loginValidation, validationErrors, login);
 app.get("/me", checkAuth, getMe);
 app.get("/users", getAllUsers);
+
+app.post("/posts", createPosts);
+app.get("/posts", getAllPosts);
 
 app.listen(PORT, (err) => {
   if (err) {

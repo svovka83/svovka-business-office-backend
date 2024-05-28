@@ -20,6 +20,7 @@ import {
   createPosts,
   getAllPosts,
   getOnePost,
+  removePost
 } from "./controller/PostController.js";
 
 const app = express();
@@ -48,6 +49,7 @@ app.get("/users", getAllUsers);
 app.post("/posts", createPosts);
 app.get("/posts", getAllPosts);
 app.get("/posts/:id", getOnePost);
+app.delete("/posts/:id", removePost)
 
 app.listen(PORT, (err) => {
   if (err) {

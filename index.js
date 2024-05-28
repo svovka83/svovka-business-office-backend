@@ -16,7 +16,11 @@ import {
   getMe,
   getAllUsers,
 } from "./controller/UserController.js";
-import { createPosts, getAllPosts } from "./controller/PostController.js";
+import {
+  createPosts,
+  getAllPosts,
+  getOnePost,
+} from "./controller/PostController.js";
 
 const app = express();
 const PORT = process.env.PORT || 5555;
@@ -43,6 +47,7 @@ app.get("/users", getAllUsers);
 
 app.post("/posts", createPosts);
 app.get("/posts", getAllPosts);
+app.get("/posts/:id", getOnePost);
 
 app.listen(PORT, (err) => {
   if (err) {

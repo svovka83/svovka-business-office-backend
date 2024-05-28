@@ -28,3 +28,14 @@ export const getAllPosts = async (req, res) => {
     });
   }
 };
+
+export const getOnePost = async (req, res) => {
+  try {
+    const post = await PostModel.findById(req.params.id);
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(404).json({
+      message: "post not found",
+    });
+  }
+};

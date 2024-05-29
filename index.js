@@ -20,6 +20,7 @@ import {
   createPosts,
   getAllPosts,
   getOnePost,
+  updatePost,
   removePost
 } from "./controller/PostController.js";
 
@@ -49,6 +50,7 @@ app.get("/users", getAllUsers);
 app.post("/posts", createPosts);
 app.get("/posts", getAllPosts);
 app.get("/posts/:id", getOnePost);
+app.put("/posts/:id", updatePost);
 app.delete("/posts/:id", removePost)
 
 app.listen(PORT, (err) => {

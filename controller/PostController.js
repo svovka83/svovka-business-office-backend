@@ -64,6 +64,7 @@ export const updatePost = async (req, res) => {
       {
         title: req.body.title,
         text: req.body.text,
+        viewCount: req.body.viewCount,
         likes: req.body.likes,
       }
     );

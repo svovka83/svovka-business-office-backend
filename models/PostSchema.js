@@ -12,7 +12,7 @@ const PostSchema = new mongoose.Schema(
     },
     viewCount: {
       type: Number,
-      default: 0,
+      default: -1,
     },
     likes: {
       type: Number,

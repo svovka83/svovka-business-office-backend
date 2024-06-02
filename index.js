@@ -21,7 +21,7 @@ import {
   getAllPosts,
   getOnePost,
   updatePost,
-  removePost
+  removePost,
 } from "./controller/PostController.js";
 
 const app = express();
@@ -47,11 +47,11 @@ app.post("/login", loginValidation, validationErrors, login);
 app.get("/me", checkAuth, getMe);
 app.get("/users", getAllUsers);
 
-app.post("/posts", createPosts);
+app.post("/posts", checkAuth, createPosts);
 app.get("/posts", getAllPosts);
 app.get("/posts/:id", getOnePost);
 app.put("/posts/:id", updatePost);
-app.delete("/posts/:id", removePost)
+app.delete("/posts/:id", checkAuth, removePost); // is not finished checkAuth
 
 app.listen(PORT, (err) => {
   if (err) {

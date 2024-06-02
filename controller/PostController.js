@@ -1,10 +1,17 @@
+import { UserModel } from "../models/UserSchema.js";
 import { PostModel } from "../models/PostSchema.js";
 
 export const createPosts = async (req, res) => {
   try {
+    const userId = req.userId
+    const user = await UserModel.findById(userId);
+    const { fullName } = user;
+    
     const doc = new PostModel({
       title: req.body.title,
       text: req.body.text,
+      userId: req.userId,
+      userName: fullName,
     });
 
     const post = await doc.save();
@@ -44,7 +51,7 @@ export const getOnePost = async (req, res) => {
         returnDocument: "after",
       }
     );
-    
+
     res.status(200).json(doc);
   } catch (err) {
     res.status(404).json({
@@ -81,10 +88,19 @@ export const updatePost = async (req, res) => {
 
 export const removePost = async (req, res) => {
   try {
-    await PostModel.findByIdAndDelete(req.params.id);
+    const postId = req.params.id;
+    let doc = await PostModel.findById(postId);
 
-    res.status(204).json({
-      message: "post is deleted",
+    if (doc.userId !== req.userId) {
+      return res.status(403).json({
+        message: "no permission",
+      });
+    }
+
+    await PostModel.findByIdAndDelete(postId);
+
+    res.status(200).json({
+      success: true,
     });
   } catch (err) {
     res.status(500).json({

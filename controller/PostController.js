@@ -3,10 +3,10 @@ import { PostModel } from "../models/PostSchema.js";
 
 export const createPosts = async (req, res) => {
   try {
-    const userId = req.userId
+    const userId = req.userId;
     const user = await UserModel.findById(userId);
     const { fullName } = user;
-    
+
     const doc = new PostModel({
       title: req.body.title,
       text: req.body.text,

@@ -27,7 +27,7 @@ export const register = async (req, res) => {
       }
     );
 
-    const { _id, email, passwordHash, ...userData } = user._doc;
+    const { passwordHash, ...userData } = user._doc;
 
     res.status(201).json({
       ...userData,
@@ -70,10 +70,10 @@ export const login = async (req, res) => {
       }
     );
 
-    const { fullName } = user._doc;
+    const { passwordHash, ...userData } = user._doc;
 
     res.status(200).json({
-      fullName,
+      ...userData,
       token,
     });
   } catch (err) {
@@ -90,9 +90,8 @@ export const getMe = async (req, res) => {
       res.status(404).json({ message: "user not found" }); // ???
     }
 
-    const { fullName } = user;
-
-    res.json({ fullName });
+    const { passwordHash, ...userData } = user._doc;
+    res.status(200).json({ ...userData });
   } catch (err) {
     console.log(err);
     res.status(404).json({ message: "user not found" });

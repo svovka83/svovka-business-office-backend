@@ -23,6 +23,10 @@ import {
   updatePost,
   removePost,
 } from "./controller/PostController.js";
+import {
+  createComment,
+  getAllComments,
+} from "./controller/CommentController.js";
 
 const app = express();
 const PORT = process.env.PORT || 5555;
@@ -51,7 +55,10 @@ app.post("/posts", checkAuth, createPosts);
 app.get("/posts", getAllPosts);
 app.get("/posts/:id", getOnePost);
 app.put("/posts/:id", updatePost);
-app.delete("/posts/:id", checkAuth, removePost); // is not finished checkAuth
+app.delete("/posts/:id", checkAuth, removePost);
+
+app.post("/comments", checkAuth, createComment);
+app.get("/comments", getAllComments);
 
 app.listen(PORT, (err) => {
   if (err) {

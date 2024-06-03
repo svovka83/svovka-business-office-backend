@@ -89,9 +89,9 @@ export const updatePost = async (req, res) => {
 export const removePost = async (req, res) => {
   try {
     const postId = req.params.id;
-    let doc = await PostModel.findById(postId);
+    let post = await PostModel.findById(postId);
 
-    if (doc.userId !== req.userId) {
+    if (post.userId !== req.userId) {
       return res.status(403).json({
         message: "no permission",
       });

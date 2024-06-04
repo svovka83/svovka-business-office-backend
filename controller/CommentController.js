@@ -11,6 +11,7 @@ export const createComment = async (req, res) => {
       comment: req.body.comment,
       userId: req.userId,
       userName: fullName,
+      postId: req.body.postId,
     });
 
     const comment = await doc.save();

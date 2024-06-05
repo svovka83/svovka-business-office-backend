@@ -26,6 +26,7 @@ import {
 import {
   createComment,
   getAllComments,
+  removeComment,
 } from "./controller/CommentController.js";
 
 const app = express();
@@ -59,6 +60,7 @@ app.delete("/posts/:id", checkAuth, removePost);
 
 app.post("/comments", checkAuth, createComment);
 app.get("/comments", getAllComments);
+app.delete("/comments/:id", checkAuth, removeComment);
 
 app.listen(PORT, (err) => {
   if (err) {

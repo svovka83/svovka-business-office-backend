@@ -29,3 +29,25 @@ export const getAllComments = async (req, res) => {
   const comments = await CommentModel.find();
   res.status(200).json(comments);
 };
+
+export const removeComment = async (req, res) => {
+  try {
+    const commentId = req.params.id;
+    const doc = await CommentModel.findById(commentId);
+
+    if (doc.userId !== req.userId) {
+      return res.status(403).json({
+        message: "no permission",
+      });
+    }
+
+    await CommentModel.findByIdAndDelete(commentId);
+    res.status(200).json({
+      success: true,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "failed to delete comment",
+    });
+  }
+};

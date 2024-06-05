@@ -73,7 +73,7 @@ export const updatePost = async (req, res) => {
         text: req.body.text,
         viewCount: req.body.viewCount,
         likeCount: req.body.likeCount,
-        isLike: req.body.isLike,
+        userLikes: req.body.userLikes,
       }
     );
 

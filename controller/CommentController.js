@@ -33,13 +33,6 @@ export const getAllComments = async (req, res) => {
 export const removeComment = async (req, res) => {
   try {
     const commentId = req.params.id;
-    const doc = await CommentModel.findById(commentId);
-
-    if (doc.userId !== req.userId) {
-      return res.status(403).json({
-        message: "no permission",
-      });
-    }
 
     await CommentModel.findByIdAndDelete(commentId);
     res.status(200).json({

@@ -1,5 +1,6 @@
 import { UserModel } from "../models/UserSchema.js";
 import { PostModel } from "../models/PostSchema.js";
+import { CommentModel } from "../models/CommentSchema.js";
 
 export const createPosts = async (req, res) => {
   try {
@@ -98,6 +99,7 @@ export const removePost = async (req, res) => {
       });
     }
 
+    await CommentModel.deleteMany({ postId: postId });
     await PostModel.findByIdAndDelete(postId);
 
     res.status(200).json({

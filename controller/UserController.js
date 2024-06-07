@@ -109,3 +109,24 @@ export const getAllUsers = async (req, res) => {
     });
   }
 };
+
+export const getOneUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      res.status(404).json({
+        message: "user not found",
+      });
+    }
+
+    const { passwordHash, ...userData } = user._doc;
+
+    res.status(200).json({...userData});
+  } catch (err) {
+    res.status(404).json({
+      message: "user not found",
+    });
+  }
+};

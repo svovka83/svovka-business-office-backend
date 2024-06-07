@@ -15,6 +15,7 @@ import {
   login,
   getMe,
   getAllUsers,
+  getOneUser
 } from "./controller/UserController.js";
 import {
   createPosts,
@@ -51,6 +52,7 @@ app.post("/register", registerValidation, validationErrors, register);
 app.post("/login", loginValidation, validationErrors, login);
 app.get("/me", checkAuth, getMe);
 app.get("/users", getAllUsers);
+app.get("/users/:id", getOneUser);
 
 app.post("/posts", checkAuth, createPosts);
 app.get("/posts", getAllPosts);

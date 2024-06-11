@@ -15,6 +15,30 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    friends: {
+      type: Array,
+      default: [],
+    },
+    age: {
+      type: Number,
+      default: null,
+    },
+    gender: {
+      type: String,
+      default: "other",
+    },
+    status: {
+      type: String,
+      default: "free",
+    },
+    country: {
+      type: String,
+      default: "no country",
+    },
+    job: {
+      type: String,
+      default: "programmer",
+    },
   },
   {
     timestamps: true,

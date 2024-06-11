@@ -23,7 +23,7 @@ export const register = async (req, res) => {
       },
       "secretTokenKey",
       {
-        expiresIn: "1d",
+        expiresIn: "30d",
       }
     );
 
@@ -66,7 +66,7 @@ export const login = async (req, res) => {
       },
       "secretTokenKey",
       {
-        expiresIn: "1d",
+        expiresIn: "30d",
       }
     );
 
@@ -84,21 +84,47 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.userId);
+    const me = await UserModel.findById(req.userId);
 
-    if (!user) {
+    if (!me) {
       res.status(404).json({ message: "user not found" }); // ???
     }
 
-    const { passwordHash, ...userData } = user._doc;
-    res.status(200).json({ ...userData });
+    const { passwordHash, ...meData } = me._doc;
+    res.status(200).json({ ...meData });
   } catch (err) {
     console.log(err);
     res.status(404).json({ message: "user not found" });
   }
 };
 
+export const updateMe = async (req, res) => {
+  try {
+    const me = await UserModel.findOneAndUpdate(
+      {
+        _id: req.userId,
+      },
+      {
+        age: req.body.age,
+        gender: req.body.gender,
+        status: req.body.status,
+        country: req.body.country,
+        job: req.body.job,
+      },
+      { returnOriginal: false }
+    );
+    const { passwordHash, ...meData } = me._doc;
+
+    res.status(200).json({ ...meData });
+  } catch (err) {
+    res.status(500).json({
+      message: "server error",
+    });
+  }
+};
+
 export const getAllUsers = async (req, res) => {
+  // think about not return passwordHash
   try {
     const users = await UserModel.find();
 
@@ -121,12 +147,42 @@ export const getOneUser = async (req, res) => {
       });
     }
 
-    const { passwordHash, ...userData } = user._doc;
+    const { passwordHash, friends, ...userData } = user._doc;
 
-    res.status(200).json({...userData});
+    res.status(200).json({ ...userData });
   } catch (err) {
     res.status(404).json({
       message: "user not found",
+    });
+  }
+};
+
+export const updateFriends = async (req, res) => {
+  try {
+    const me = await UserModel.findOneAndUpdate(
+      {
+        _id: req.myId,
+      },
+      {
+        friends: req.newMyFriends,
+      },
+      { returnOriginal: false }
+    );
+    const user = await UserModel.findOneAndUpdate(
+      {
+        _id: req.userId,
+      },
+      {
+        friends: req.newUserFriends,
+      },
+      { returnOriginal: false }
+    );
+    const { passwordHash, ...meData } = me._doc;
+
+    res.status(200).json({ ...meData });
+  } catch (err) {
+    res.status(500).json({
+      message: "server error",
     });
   }
 };

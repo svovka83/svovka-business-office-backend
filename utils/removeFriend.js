@@ -2,14 +2,19 @@ import { UserModel } from "../models/UserSchema.js";
 
 export const removeFriend = async (req, res, next) => {
   try {
-    const meId = req.userId;
-    const me = await UserModel.findById(meId);
+    const myId = req.userId;
+    const me = await UserModel.findById(myId);
     const myFriends = me.friends;
 
     const userId = req.params.id;
+    const user = await UserModel.findById(userId);
+    const userFriends = user.friends;
 
-    req.newFriends = myFriends.filter(f => f !== userId);
-    req.userId = meId;
+    req.newMyFriends = myFriends.filter(f => f !== userId);
+    req.myId = myId;
+
+    req.newUserFriends = userFriends.filter(f => f !== myId);
+    req.userId = userId;
 
     next();
   } catch (err) {

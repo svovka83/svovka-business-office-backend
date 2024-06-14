@@ -65,22 +65,20 @@ export const updatePost = async (req, res) => {
   try {
     const postId = req.params.id;
 
-    await PostModel.updateOne(
+    const post = await PostModel.findOneAndUpdate(
       {
         _id: postId,
       },
       {
         title: req.body.title,
         text: req.body.text,
-        viewCount: req.body.viewCount,
         likeCount: req.body.likeCount,
         userLikes: req.body.userLikes,
-      }
+      },
+      { returnOriginal: false }
     );
 
-    res.status(200).json({
-      success: true,
-    });
+    res.status(200).json(post);
   } catch (err) {
     res.status(500).json({
       message: "failed to update post",

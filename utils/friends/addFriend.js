@@ -1,6 +1,6 @@
-import { UserModel } from "../models/UserSchema.js";
+import { UserModel } from "../../models/UserSchema.js";
 
-export const removeFriend = async (req, res, next) => {
+export const addFriend = async (req, res, next) => {
   try {
     const myId = req.userId;
     const me = await UserModel.findById(myId);
@@ -10,16 +10,16 @@ export const removeFriend = async (req, res, next) => {
     const user = await UserModel.findById(userId);
     const userFriends = user.friends;
 
-    req.newMyFriends = myFriends.filter(f => f !== userId);
+    req.newMyFriends = myFriends.concat([userId]);
     req.myId = myId;
-
-    req.newUserFriends = userFriends.filter(f => f !== myId);
+    
+    req.newUserFriends = userFriends.concat([myId]);
     req.userId = userId;
 
     next();
   } catch (err) {
     res.status(403).json({
-      message: "no access",
+      message: "no access 3",
     });
   }
 };

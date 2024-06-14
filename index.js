@@ -9,8 +9,8 @@ import {
 } from "./validations/validationConditions.js";
 import { validationErrors } from "./validations/validationErrors.js";
 import { checkAuth } from "./utils/checkAuth.js";
-import { addFriend } from "./utils/addFriend.js";
-import { removeFriend } from "./utils/removeFriend.js";
+import { addFriend } from "./utils/friends/addFriend.js";
+import { removeFriend } from "./utils/friends/removeFriend.js";
 
 import {
   register,
@@ -21,6 +21,12 @@ import {
   getOneUser,
   updateFriends,
 } from "./controller/UserController.js";
+import {
+  createDialog,
+  getOneDialog,
+  updateDialog,
+  removeDialog,
+} from "./controller/DialogController.js";
 import {
   createPosts,
   getAllPosts,
@@ -55,11 +61,16 @@ app.use(cors());
 app.post("/register", registerValidation, validationErrors, register);
 app.post("/login", loginValidation, validationErrors, login);
 app.get("/me", checkAuth, getMe);
-app.put("/me", checkAuth, updateMe)
+app.put("/me", checkAuth, updateMe);
 app.get("/users", getAllUsers);
 app.get("/users/:id", getOneUser);
 app.put("/users/add_friend/:id", checkAuth, addFriend, updateFriends);
 app.put("/users/remove_friend/:id", checkAuth, removeFriend, updateFriends);
+
+app.post("/dialogs/:id", checkAuth, createDialog);
+app.get("/dialogs/:id", checkAuth, getOneDialog);
+app.put("/dialogs/:id", checkAuth, updateDialog);
+app.delete("/dialogs/:id", checkAuth, removeDialog);
 
 app.post("/posts", checkAuth, createPosts);
 app.get("/posts", getAllPosts);

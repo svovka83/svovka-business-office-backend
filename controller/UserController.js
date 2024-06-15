@@ -109,7 +109,9 @@ export const updateMe = async (req, res) => {
         gender: req.body.gender,
         status: req.body.status,
         country: req.body.country,
+        education: req.body.education,
         job: req.body.job,
+        hobby: req.body.hobby,
       },
       { returnOriginal: false }
     );

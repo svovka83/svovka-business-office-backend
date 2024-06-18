@@ -4,7 +4,7 @@ import { UserModel } from "../models/UserSchema.js";
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, "uploads/avatars");
+    cb(null, "uploads");
   },
   filename(req, file, cb) {
     cb(null, file.originalname);

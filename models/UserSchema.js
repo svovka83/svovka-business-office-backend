@@ -19,6 +19,10 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    urlAvatar: {
+      type: String,
+      default: "",
+    },
     age: {
       type: Number,
       default: null,
@@ -41,7 +45,7 @@ const UserSchema = new mongoose.Schema(
     },
     job: {
       type: String,
-      default: "programmer",
+      default: "no job",
     },
     hobby: {
       type: Array,

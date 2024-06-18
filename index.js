@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
+import path from "path";
 
 import {
   registerValidation,
@@ -40,6 +41,8 @@ import {
   removeComment,
 } from "./controller/CommentController.js";
 
+import { uploadAvatar, createAvatar } from "./utils/multer.js";
+
 const app = express();
 const PORT = process.env.PORT || 5555;
 
@@ -57,6 +60,7 @@ mongoose
 
 app.use(express.json());
 app.use(cors());
+app.use("/uploads", express.static(path.join("uploads")));
 
 app.post("/register", registerValidation, validationErrors, register);
 app.post("/login", loginValidation, validationErrors, login);
@@ -66,6 +70,8 @@ app.get("/users", getAllUsers);
 app.get("/users/:id", getOneUser);
 app.put("/users/add_friend/:id", checkAuth, addFriend, updateFriends);
 app.put("/users/remove_friend/:id", checkAuth, removeFriend, updateFriends);
+
+app.post("/upload", checkAuth, uploadAvatar.single("avatar"), createAvatar);
 
 app.post("/dialogs/:id", checkAuth, createDialog);
 app.get("/dialogs/:id", checkAuth, getOneDialog);

@@ -105,6 +105,7 @@ export const updateMe = async (req, res) => {
         _id: req.userId,
       },
       {
+        urlAvatar: req.body.urlAvatar,
         age: req.body.age,
         gender: req.body.gender,
         status: req.body.status,

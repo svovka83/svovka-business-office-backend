@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
-import path from "path";
 
 import {
   registerValidation,
@@ -60,7 +59,7 @@ mongoose
 
 app.use(express.json());
 app.use(cors());
-app.use("/uploads", express.static(path.join("uploads")));
+app.use("/uploads", express.static("uploads"));
 
 app.post("/register", registerValidation, validationErrors, register);
 app.post("/login", loginValidation, validationErrors, login);

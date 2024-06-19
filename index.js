@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 
+import { createServer } from 'node:http';
+import { Server } from "socket.io";
+
 import {
   registerValidation,
   loginValidation,
@@ -58,7 +61,7 @@ mongoose
   });
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use("/uploads", express.static("uploads"));
 
 app.post("/register", registerValidation, validationErrors, register);
@@ -87,7 +90,9 @@ app.post("/comments", checkAuth, createComment);
 app.get("/comments", getAllComments);
 app.delete("/comments/:id", checkAuth, removeComment);
 
-app.listen(PORT, (err) => {
+const server = createServer(app);
+
+server.listen(PORT, (err) => {
   if (err) {
     return console.log("Some error:", err);
   }

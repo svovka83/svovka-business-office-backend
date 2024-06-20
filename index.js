@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 
-import { createServer } from 'node:http';
+import { createServer } from "node:http";
 import { Server } from "socket.io";
 
 import {
@@ -91,6 +91,24 @@ app.get("/comments", getAllComments);
 app.delete("/comments/:id", checkAuth, removeComment);
 
 const server = createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  socket.on("join", ({name, room}) => {
+    socket.join(room);
+    console.log(`Chat is working. Hello ${name}`);
+  });
+
+  io.on("disconnect", () => {
+    console.log("Disconnect");
+  });
+});
 
 server.listen(PORT, (err) => {
   if (err) {

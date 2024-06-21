@@ -101,8 +101,17 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   socket.on("join", ({name, room}) => {
-    socket.join(room);
+    socket.join(room);    
     console.log(`Chat is working. Hello ${name}`);
+
+    socket.emit("message", {
+      user: {name: "admin"},
+      message: `Hello ${name}`
+    })
+    socket.on("sendMessage", ({message, params}) => {
+      socket.emit("returnMessage", {message, params})
+      console.log({message, params});
+    })
   });
 
   io.on("disconnect", () => {

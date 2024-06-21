@@ -109,7 +109,7 @@ io.on("connection", (socket) => {
       message: `Hello ${name}`
     })
     socket.on("sendMessage", ({message, params}) => {
-      socket.emit("returnMessage", {message, params})
+      io.to(room).emit("returnMessage", {message, params})
       console.log({message, params});
     })
   });

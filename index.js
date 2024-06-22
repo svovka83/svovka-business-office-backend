@@ -92,32 +92,63 @@ app.delete("/comments/:id", checkAuth, removeComment);
 
 const server = createServer(app);
 
-const io = new Server(server, {
+const chat = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
-io.on("connection", (socket) => {
-  socket.on("join", ({name, room}) => {
-    socket.join(room);    
-    console.log(`Chat is working. Hello ${name}`);
-
+chat.on("connection", (socket) => {
+  socket.on("join", ({ name, room }) => {
+    socket.join(room);
     socket.emit("message", {
-      user: {name: "admin"},
-      message: `Hello ${name}`
-    })
-    socket.on("sendMessage", ({message, params}) => {
-      io.to(room).emit("returnMessage", {message, params})
-      console.log({message, params});
-    })
+      params: { name: "Admin" },
+      message: `Hello ${name}`,
+    });
+
+    socket.broadcast.to(room).emit("message", {
+      params: { name: "Admin" },
+      message: `User ${name} joined to as.`,
+    });
+
+    socket.on("sendMessage", ({ params, message }) => {
+      chat.to(room).emit("message", { params, message });
+    });
+    
+    socket.on("leaveRoom", ({ name, room }) => {
+      chat.to(room).emit("message", {
+        params: { name: "Admin" },
+        message: `User ${name} leave the chat`,
+      });
+    });
   });
 
-  io.on("disconnect", () => {
+  chat.on("disconnect", () => {
     console.log("Disconnect");
   });
 });
+
+// const dialog = new Server(server, {
+//     cors: {
+//       origin: "*",
+//       methods: ["GET", "POST"],
+//     },
+//   });
+
+//   dialog.on("connection", (socket) => {
+//     socket.on("join", ({room}) => {
+//       socket.join(room);
+
+//       socket.on("sendMessage", (inputMessage) => {
+//         dialog.to(room).emit("returnMessage", inputMessage)
+//       })
+//     });
+
+//     dialog.on("disconnect", () => {
+//       console.log("Disconnect");
+//     });
+//   });
 
 server.listen(PORT, (err) => {
   if (err) {

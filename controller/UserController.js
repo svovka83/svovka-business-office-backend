@@ -127,7 +127,6 @@ export const updateMe = async (req, res) => {
 };
 
 export const getAllUsers = async (req, res) => {
-  // think about not return passwordHash
   try {
     const users = await UserModel.find();
 

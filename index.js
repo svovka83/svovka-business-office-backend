@@ -92,63 +92,52 @@ app.delete("/comments/:id", checkAuth, removeComment);
 
 const server = createServer(app);
 
-const chat = new Server(server, {
+const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
-chat.on("connection", (socket) => {
+io.on("connection", (socket) => {
   socket.on("join", ({ name, room }) => {
     socket.join(room);
+    console.log("connect");
     socket.emit("message", {
       params: { name: "Admin" },
-      message: `Hello ${name}`,
+      message: `Привіт ${name}`,
     });
 
     socket.broadcast.to(room).emit("message", {
       params: { name: "Admin" },
-      message: `User ${name} joined to as.`,
+      message: `Користувач ${name} приєднався до чату.`,
     });
 
     socket.on("sendMessage", ({ params, message }) => {
-      chat.to(room).emit("message", { params, message });
+      io.to(room).emit("message", { params, message });
     });
-    
+
     socket.on("leaveRoom", ({ name, room }) => {
-      chat.to(room).emit("message", {
+      io.to(room).emit("message", {
         params: { name: "Admin" },
-        message: `User ${name} leave the chat`,
+        message: `Користувач ${name} покидає чат`,
       });
     });
   });
 
-  chat.on("disconnect", () => {
+  socket.on("let", ({ room }) => {
+    socket.join(room);
+    console.log("connect");
+
+    socket.on("sendMessage", (fields) => {
+      io.to(room).emit("returnMessage", fields);
+    });
+  });
+
+  io.on("disconnect", () => {
     console.log("Disconnect");
   });
 });
-
-// const dialog = new Server(server, {
-//     cors: {
-//       origin: "*",
-//       methods: ["GET", "POST"],
-//     },
-//   });
-
-//   dialog.on("connection", (socket) => {
-//     socket.on("join", ({room}) => {
-//       socket.join(room);
-
-//       socket.on("sendMessage", (inputMessage) => {
-//         dialog.to(room).emit("returnMessage", inputMessage)
-//       })
-//     });
-
-//     dialog.on("disconnect", () => {
-//       console.log("Disconnect");
-//     });
-//   });
 
 server.listen(PORT, (err) => {
   if (err) {

@@ -61,7 +61,7 @@ export const updateDialog = async (req, res) => {
     const message = req.body.dialog;
     const newDialog = dialog.concat([message]);
 
-    const newDialogs = await DialogModel.findOneAndUpdate(
+    await DialogModel.findOneAndUpdate(
       {
         usersId1: myId,
         usersId2: userId,
@@ -69,10 +69,9 @@ export const updateDialog = async (req, res) => {
       {
         dialog: newDialog,
       },
-      { returnOriginal: false }
     );
 
-    res.status(200).json(newDialogs);
+    res.status(200).json({ success: true });
   } catch (err) {
     console.log(err);
     res.status(500).json({

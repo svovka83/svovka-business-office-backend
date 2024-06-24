@@ -100,9 +100,9 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join", ({ name, room }) => {
+  socket.on("join_chat", ({ name, room }) => {
     socket.join(room);
-    console.log("connect");
+    console.log("join_chat");
     socket.emit("message", {
       params: { name: "Admin" },
       message: `Привіт ${name}`,
@@ -125,12 +125,12 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("let", ({ room }) => {
+  socket.on("join_dialog", ({ room }) => {
     socket.join(room);
-    console.log("connect");
+    console.log("join_dialog");
 
-    socket.on("sendMessage", (fields) => {
-      io.to(room).emit("returnMessage", fields);
+    socket.on("sendDialog", (fields) => {
+      io.to(room).emit("returnDialog", fields);
     });
   });
 

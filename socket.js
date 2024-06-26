@@ -51,3 +51,7 @@ io.on("connection", (socket) => {
     console.log("Disconnect");
   });
 });
+
+server.setMaxListeners(0);
+io.setMaxListeners(0);
+io.sockets.setMaxListeners(0);

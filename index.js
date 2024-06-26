@@ -3,8 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 
-import { createServer } from "node:http";
-import { Server } from "socket.io";
+import { app, server } from "./server.js";
 
 import {
   registerValidation,
@@ -45,7 +44,6 @@ import {
 
 import { uploadAvatar, createAvatar } from "./utils/multer.js";
 
-const app = express();
 const PORT = process.env.PORT || 5555;
 
 dotenv.config();
@@ -61,7 +59,7 @@ mongoose
   });
 
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use("/uploads", express.static("uploads"));
 
 app.post("/register", registerValidation, validationErrors, register);
@@ -89,55 +87,6 @@ app.delete("/posts/:id", checkAuth, removePost);
 app.post("/comments", checkAuth, createComment);
 app.get("/comments", getAllComments);
 app.delete("/comments/:id", checkAuth, removeComment);
-
-const server = createServer(app);
-
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
-
-io.on("connection", (socket) => {
-  socket.on("join_chat", ({ name, room }) => {
-    socket.join(room);
-    console.log("join_chat");
-    socket.emit("message", {
-      params: { name: "Admin" },
-      message: `Привіт ${name}`,
-    });
-
-    socket.broadcast.to(room).emit("message", {
-      params: { name: "Admin" },
-      message: `Користувач ${name} приєднався до чату.`,
-    });
-
-    socket.on("sendMessage", ({ params, message }) => {
-      io.to(room).emit("message", { params, message });
-    });
-
-    socket.on("leaveRoom", ({ name, room }) => {
-      io.to(room).emit("message", {
-        params: { name: "Admin" },
-        message: `Користувач ${name} покидає чат`,
-      });
-    });
-  });
-
-  socket.on("join_dialog", ({ room }) => {
-    socket.join(room);
-    console.log("join_dialog");
-
-    socket.on("sendDialog", (fields) => {
-      io.to(room).emit("returnDialog", fields);
-    });
-  });
-
-  io.on("disconnect", () => {
-    console.log("Disconnect");
-  });
-});
 
 server.listen(PORT, (err) => {
   if (err) {

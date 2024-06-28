@@ -1,7 +1,7 @@
 {
-  "name": "tasks-for-children-backend",
+  "name": "svovka-business-office-backend",
   "version": "1.0.0",
-  "description": "tasks for children",
+  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
